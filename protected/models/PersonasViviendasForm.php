@@ -54,7 +54,7 @@ class PersonasViviendasForm extends CFormModel
 		// will receive user inputs.
 		return array(
 			array('nombres, apellidos, sexo,cedula
-                            id_vivienda, calle, nom_c, num_c, telf', 'required'),
+                            id_vivienda, calle, nom_c, num_c, telf,fecha_ingreso,fecha_nacimiento', 'required'),
 			array('nombres, apellidos', 'length', 'max'=>40),
                         array('calle, nom_c', 'length', 'max'=>20),
                         array('num_c', 'length', 'max'=>5),
@@ -69,21 +69,6 @@ class PersonasViviendasForm extends CFormModel
 			//array('cedula, nombres, apellidos, sexo, fecha_ingreso, fecha_nacimiento, email, id_viviendaV, id_viviendaP, calle, nom_c, num_c, telf', 'safe', 'on'=>'search'),
 		);
 	}
-       
-	/**
-	 * @return array relational rules.
-	 */
-       
-	public function relations()
-	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-			'idVivienda' => array(self::BELONGS_TO, 'Viviendas', 'id_vivienda'),
-                        'personas' => array(self::HAS_MANY, 'Personas', 'id_vivienda'),
-		);
-	}
-
 	/**
 	 * @return array customized attribute labels (name=>label)
 	 */
@@ -114,6 +99,16 @@ class PersonasViviendasForm extends CFormModel
    			if($this->fecha_nacimiento == null)
     			$this->addError('fecha_nacimiento','La fecha de nacimiento es requerida.');
   	}
+        public function relations()
+	{
+		// NOTE: you may need to adjust the relation name and the related
+		// class name for the relations automatically generated below.
+		return array(
+			'idVivienda' => array(self::BELONGS_TO, 'Viviendas', 'id_vivienda'),
+			'idCargo' => array(self::BELONGS_TO, 'Cargos', 'id_cargo'),
+                        'personas' => array(self::HAS_MANY, 'Personas', 'id_vivienda'),
+		);
+	}
 	/**
 	 * Retrieves a list of models based on the current search/filter conditions.
 	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.

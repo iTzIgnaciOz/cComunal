@@ -20,51 +20,59 @@ $this->menu=array(
             <h2 align="center">Registro Completo</h2>
           
       <?php $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
+          'id'=>'verticalForm',
+          
 	'enableAjaxValidation'=>false,
+        'enableClientValidation'=>true,
+	'clientOptions'=>array(
+		'validateOnSubmit'=>true,
+	),
         )); ?>
-	<?php echo $form->errorSummary($PersonasViviendasForm); ?>
+	<?php echo $form->errorSummary(array($persona,$vivienda)); ?>
             <div  > 
                 <div class="span5">
                     <!--  Personas -->
                     <fieldset> 
                         <legend>Datos Personales</legend>
-                        <div >
-                <?php echo $form->labelEx($PersonasViviendasForm,'cedula'); ?>
+                        <div class="row-fluid" >
+                <?php echo $form->labelEx($persona,'cedula'); ?>
 		<?php $this->widget(
                     'yiiwheels.widgets.maskinput.WhMaskInput',
                     array(
-                        'name'        => 'cedula',
+                        'model'=>$persona,
+                        'attribute'        => 'cedula',
                         'mask'        => '11111111',
                         'htmlOptions' => array('placeholder' => '20190472')
             )
         );?>
-		<?php echo $form->error($PersonasViviendasForm,'cedula'); ?>
+		<?php echo $form->error($persona,'cedula'); ?>
                         </div>
             
-                        <div >
-		<?php echo $form->textFieldControlGroup($PersonasViviendasForm,'nombres'); ?>
-		<?php echo $form->error($PersonasViviendasForm,'nombres'); ?>
+                        <div class="row-fluid" >
+		<?php echo $form->textFieldControlGroup($persona,'nombres'); ?>
+		
                         </div>
             
-                        <div >
-		<?php echo $form->textFieldControlGroup($PersonasViviendasForm,'apellidos'); ?>
-		<?php echo $form->error($PersonasViviendasForm,'apellidos'); ?>
+                        <div class="row-fluid" >
+		<?php echo $form->textFieldControlGroup($persona,'apellidos'); ?>
+		<?php echo $form->error($persona,'apellidos'); ?>
                         </div>
                         <div >
-		<?php echo $form->inlineRadioButtonListControlGroup($PersonasViviendasForm, 'sexo', array(
-                    'F',
-                    'M',
+		<?php echo $form->inlineRadioButtonListControlGroup($persona, 'sexo', array(
+                    'F'=>'F',
+                    'M'=>'M',
                 )); ?>
-		<?php echo $form->error($PersonasViviendasForm,'sexo'); ?>
+		<?php echo $form->error($persona,'sexo'); ?>
                         </div>
                         <div class="row-fluid">
-                        <?php $form->labelEx($PersonasViviendasForm,'fecha_ingreso');?> 
+                        <?php echo $form->labelEx($persona,'fecha_ingreso');?> 
                        <div class="input-append">
                            
                     <?php 
                    
                     $this->widget('yiiwheels.widgets.datepicker.WhDatePicker', array(
-                        'name' => 'fecha_ingreso',
+                        'model'=>$persona,
+                        'attribute'        => 'fecha_ingreso',
                         'pluginOptions' => array(
                         'format' => 'yyyy-mm-dd'
                                      )
@@ -72,14 +80,45 @@ $this->menu=array(
                         ?>
                 <span class="add-on"><icon class="icon-calendar"></icon></span>
                 </div> 
-                     <?php echo $form->error($PersonasViviendasForm,'email'); ?>
+                     <?php echo $form->error($persona,'fecha_ingreso'); ?>
                         </div>
-        
-<div >
-		<?php echo $form->emailFieldControlGroup($PersonasViviendasForm,'email'); ?>
-                            <span class="add-on"><icon class="icon-email"></icon></span>
-		<?php echo $form->error($PersonasViviendasForm,'email'); ?>
-                            
+                        <div class="row-fluid">
+                        <?php echo $form->labelEx($persona,'fecha_nacimiento');?> 
+                       <div class="input-append">
+                           
+                    <?php 
+                   
+                    $this->widget('yiiwheels.widgets.datepicker.WhDatePicker', array(
+                        'model'=>$persona,
+                        'attribute'        => 'fecha_nacimiento',
+                        'pluginOptions' => array(
+                        'format' => 'yyyy-mm-dd'
+                                     )
+                                 ));
+                        ?>
+                <span class="add-on"><icon class="icon-calendar"></icon></span>
+                </div> 
+                     <?php echo $form->error($persona,'fecha_nacimiento'); ?>
+                        </div>
+                        <div class="row-fluid">
+                         <?php echo $form->dropDownListControlGroup($persona, 'id_cargo',
+        array(''=>'Seleccione un cargo','1'=>'Residente','2'=>'Vocero')); ?>
+                        </div>
+                        <div class="row-fluid" >
+		<?php echo $form->emailFieldControlGroup($persona,'email'); ?>
+                        </div>
+                        <div class="row-fluid">
+		<?php echo $form->labelEx($persona,'telf'); ?>
+		<?php $this->widget(
+                    'yiiwheels.widgets.maskinput.WhMaskInput',
+                    array(
+                        'model'=>$persona,
+                        'attribute'        => 'telf',
+                        'mask'          => '99999999999',
+                'htmlOptions'   => array('placeholder' => '04143391525'),
+            )
+        );?>
+		<?php echo $form->error($persona,'telf'); ?>
                         </div>
                     </fieldset>
                 </div>
@@ -88,36 +127,26 @@ $this->menu=array(
                     <!--  Viviendas -->
                     <fieldset> 
                         <legend>Datos de la Vivienda</legend>
+                          <div class="row-fluid">
+            
+		<?php echo $form->textFieldControlGroup($vivienda,'urbanizacion'); ?>
+                        </div>
                             <div class="row-fluid">
               
-		<?php echo $form->textFieldControlGroup($PersonasViviendasForm,'calle'); ?>
-		<?php echo $form->error($PersonasViviendasForm,'calle'); ?>
+		<?php echo $form->textFieldControlGroup($vivienda,'calle'); ?>
                         </div>
             
                             <div class="row-fluid">
             
-		<?php echo $form->textFieldControlGroup($PersonasViviendasForm,'nom_c'); ?>
-		<?php echo $form->error($PersonasViviendasForm,'nom_c'); ?>
+		<?php echo $form->textFieldControlGroup($vivienda,'nom_c'); ?>
                         </div>
             
                             <div class="row-fluid">
             
-		<?php echo $form->textFieldControlGroup($PersonasViviendasForm,'num_c'); ?>
-		<?php echo $form->error($PersonasViviendasForm,'num_c'); ?>
+		<?php echo $form->textFieldControlGroup($vivienda,'num_c'); ?>
                         </div>
             
-                        <div class="row-fluid">
-		<?php echo $form->labelEx($PersonasViviendasForm,'telf'); ?>
-		<?php $this->widget(
-                    'yiiwheels.widgets.maskinput.WhMaskInput',
-                    array(
-                        'name'          => 'telf',
-                        'mask'          => '99999999999',
-                'htmlOptions'   => array('placeholder' => '04143391525'),
-            )
-        );?>
-		<?php echo $form->error($PersonasViviendasForm,'telf'); ?>
-                        </div>
+                        
                     </fieldset>
                 </div>
             

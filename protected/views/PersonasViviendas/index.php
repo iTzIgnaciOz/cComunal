@@ -66,6 +66,9 @@ $this->widget('yiiwheels.widgets.grid.WhGridView', array(
             'name' => 'ID Vivienda',
             'value' => 'CHtml::encode($data["id_vivienda"])'
         ),
+            
 )));
+
+
 ?>
 </div>

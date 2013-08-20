@@ -4,69 +4,58 @@ class PersonasViviendasController extends Controller
 {	public $layout='//layouts/column2';
 	public function actionCrear()
 	{
-		$PersonasViviendasForm = new PersonasViviendasForm();
+		$persona = new Personas();
+                $vivienda = new Viviendas();
 		
-		if(isset($_POST['$PersonasViviendasForm']))
-		{
-			$PersonasViviendasForm -> attributes = $_POST['PersonasViviendasForm'];
-			
-			if($PersonasViviendasForm -> validate())
-			{
-				$PersonasViviendas = new PersonasViviendas();
-				$PersonasViviendas -> attributes = $_POST['PersonasViviendasForm'];
-							
+		if(isset($_POST['Personas']) and isset($_POST['Viviendas']))
+		{ 
+			$persona -> attributes = $_POST['Personas'];
+                        $vivienda -> attributes = $_POST['Viviendas'];
+			if($persona -> validate() && $vivienda->validate())
 				try
 				{
-					$control = false;
+					$controlP = false;
+                                        $controlV = false;
 					
-					if(!$usuario -> existe() and !$vivienda -> existe())
+					if(!$persona -> existe())
 					{
-						$control = $usuario -> agregar();
-						$controlV = $vivienda ->agregar();
+                                            if(!$vivienda-> existe()){
+                                            
+						$controlV = $vivienda -> save();
+                                                
+                                                $controlP = $persona -> agregar($vivienda->buscarIdVivienda());
+                                            }
+                                            else {
+                                               Yii::app()->user->setFlash('error', '<strong>Error </strong> No se pudo registrar la vivienda ya que esta registrada en el sistema'); 
+                                            }
 					}
+                                        
 					else
-					{
-						$control = $usuario -> actualizar();
-						$controlV = $vivienda -> actualizar();
-					}
-
-					if($control )
-					{
-						Yii::app() -> user -> setFlash('mensajeEstado', 'El registro fue incorporado exitosamente ' .
-						                                                'en la base de datos');
+					{ // ERRORES
+                                            Yii::app()->user->setFlash('error', '<strong>Error </strong> No se pudo registrar la persona ya que esta registrada en el sistema');
 						
-						$usuarioForm = new UsuarioForm();
 					}
-					else
-					{ 	
-						
-						$usuarioForm -> addError('ci', 'El registro no pudo ser incorporado en ' .
-						                                     'la base de datos, inténtelo nuevamente');
-					}
-					if($controlV)
-						{
-						Yii::app() -> user -> setFlash('mensajeEstado', 'El registro fue incorporado exitosamente ' .
-						                                                'en la base de datos');
-						
-						$regViviendasForm = new RegViviendasForm();
-						}
-						else
-					{ 	
-						
-						$regViviendasForm -> addError('ci', 'El registro no pudo ser incorporado en ' .
-						                                     'la base de datos, inténtelo nuevamente');
-					}
-				}
+                                        if($controlP && $controlV){
+                                            Yii::app()->user->setFlash('succes', '<strong>Registro Satisfactorio </strong> Se ha registrado exitosamente!');
+                                            $persona = new Personas();
+                                            $vivienda = new Viviendas(); 
+                                            }
+                                            else {
+					Yii::app()->user->setFlash('warning', '<strong>Alerta </strong> No se ha podido completar la operacion, intente de nuevo...!');
+                                                }
+                                }
 				catch (Exception $e)
 				{
-					$usuarioForm -> addError('ci', $e -> getMessage());
-					$regViviendasForm -> addError('ci', $e -> getMessage());
+					$persona -> addError('cedula', $e -> getMessage());
+					
 				}
 			}
-		}
+                        
+		
 
 		$this -> render('crear', 
-		                array('PersonasViviendasForm' => $PersonasViviendasForm,
+		                array('persona' => $persona,
+                                    'vivienda' => $vivienda,
 							
 						));
 	}
@@ -77,7 +66,7 @@ class PersonasViviendasController extends Controller
               personas.cedula, 
               personas.nombres, 
               personas.apellidos, 
-              personas.sexo, 
+              UPPER(personas.sexo) as sexo, 
               personas.fecha_ingreso, 
               personas.fecha_nacimiento, 
               viviendas.calle, 

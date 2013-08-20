@@ -43,7 +43,15 @@
 			'links'=>$this->breadcrumbs,
 		)); ?><!-- breadcrumbs -->
 	<?php endif?>
-
+ <?php if(($msgs=Yii::app()->user->getFlashes())!== NULL):?>
+         <?php foreach($msgs as $type =>$message):?>
+    <div class="alert alert-<?PHP echo $type;?>">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <h4><?PHP echo ucfirst($type);?>!</h4> 
+        <?PHP echo $message;?>
+    </div>
+     <?PHP endforeach;?>
+     <?PHP endif;?>
 	<?php echo $content; ?>
 
 	<div class="clear"></div>
